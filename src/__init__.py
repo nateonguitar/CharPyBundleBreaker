@@ -15,10 +15,19 @@ class Match3Game(Game):
         self.board = Board(width=self.width, height=self.height)
         self.cursor = Cursor(self.board.size)
         self.set_on_keydown(self.on_key_down)
+        self.ending_turn = False
+        self.end_turn_duration = 1
+        self.time_since_ended_turn = 0
 
 
     def update(self, deltatime: datetime.timedelta):
         self.cursor.update(deltatime)
+        if self.ending_turn:
+            self.time_since_ended_turn += deltatime.total_seconds()
+            if self.time_since_ended_turn >= self.end_turn_duration:
+                self.time_since_ended_turn = 0
+                self.ending_turn = False
+                self.board.fill()
 
 
     def draw(self):
@@ -49,11 +58,12 @@ class Match3Game(Game):
             self.cursor.move('right')
             return
 
-        if key == keyboard.Key.space:
+        if key == keyboard.Key.space and not self.ending_turn:
             self.end_turn()
             return
 
     def end_turn(self):
+        self.ending_turn = True
         m = self.board.matrix
         match_sizes = []
         for i in range(len(m)):
@@ -87,4 +97,3 @@ class Match3Game(Game):
                         for k in range(j, j+right):
                             if m[i][k] is char:
                                 m[i][k] = None
-        self.board.fill()
