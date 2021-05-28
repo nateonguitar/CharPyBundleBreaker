@@ -1,6 +1,6 @@
 import datetime
 
-from charpy import GameObject, Matrix, MatrixBorder, Vector2, Screen
+from charpy import GameObject, Matrix, Vector2, Screen
 
 class Cursor(GameObject):
 
