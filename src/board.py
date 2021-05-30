@@ -4,9 +4,8 @@ from charpy import GameObject, Matrix, MatrixBorder, Vector2, Screen
 import colorama
 
 class Board(GameObject):
-    
 
-    def __init__(self, width:int, height:int):
+    def __init__(self):
         super().__init__()
         RED = colorama.Fore.RED
         GREEN = colorama.Fore.GREEN
@@ -24,7 +23,7 @@ class Board(GameObject):
               _BLUE('♤'),
             _YELLOW('♢'),
         ]
-        self.matrix = Matrix.empty_sized(height, width)
+        self.matrix = Matrix.empty_sized(self.game_instance.height, self.game_instance.width)
         self.position = Vector2(1, 1)
         self.fill()
 

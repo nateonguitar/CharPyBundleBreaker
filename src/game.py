@@ -12,8 +12,8 @@ class Match3Game(Game):
         super().__init__()
         self.width = 8
         self.height = 8
-        self.board = Board(width=self.width, height=self.height)
-        self.cursor = Cursor(self.board.size)
+        self.board = Board()
+        self.cursor = Cursor()
         self.set_on_keydown(self.on_key_down)
         self.ending_turn = False
         self.end_turn_duration = 1
@@ -61,6 +61,7 @@ class Match3Game(Game):
         if key == keyboard.Key.space and not self.ending_turn:
             self.end_turn()
             return
+
 
     def end_turn(self):
         self.ending_turn = True
