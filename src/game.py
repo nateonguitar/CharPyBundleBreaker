@@ -5,7 +5,7 @@ from pynput import keyboard
 
 from .board import Board
 from .cursor import Cursor
-from .starting_image import StartingScreen
+from .starting_screen import StartingScreen
 
 class Match3Game(Game):
 
