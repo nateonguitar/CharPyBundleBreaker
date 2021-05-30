@@ -1,13 +1,13 @@
 import datetime
 
-from charpy import GameObject, Matrix, Screen
+from charpy import GameObject, Matrix, Screen, Vector2
 import colorama
 from pynput import keyboard
 
 
 class Cursor(GameObject):
 
-    def __init__(self):
+    def __init__(self, board_size: Vector2):
         """
         _game is a reference to the 
         """
@@ -18,7 +18,7 @@ class Cursor(GameObject):
         super().__init__()
         self.spin = False
 
-        self.board_size = self.game_instance.board.size
+        self.board_size = board_size
         self.state_index = 0
 
         self.matrix = Matrix((

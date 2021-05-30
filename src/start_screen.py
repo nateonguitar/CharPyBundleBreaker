@@ -5,7 +5,7 @@ from charpy import GameObject, Matrix, Screen
 import colorama
 from pynput import keyboard
 
-class StartingScreen(GameObject):
+class StartScreen(GameObject):
     def __init__(self):
         super().__init__()
         self.image = [
@@ -54,8 +54,11 @@ class StartingScreen(GameObject):
 
 
     def on_key_down(self, key: keyboard.Key):
+        pass
+
+    def on_key_up(self, key: keyboard.Key):
         if key == keyboard.Key.space:
-            self.game_instance.showing_starting_screen = False
+            self.game_instance.start_game()
             return
 
 
