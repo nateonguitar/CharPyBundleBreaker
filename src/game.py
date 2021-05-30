@@ -1,24 +1,38 @@
 import datetime
 
-from charpy import Game
+from charpy import Game, Matrix, Vector2
 from pynput import keyboard
 
 from .board import Board
 from .cursor import Cursor
+from .starting_image import StartingImage
 
 class Match3Game(Game):
 
+    INSTRUCTIONS = {
+        'position': Vector2.zero(),
+        'matrix': Matrix([
+            'Space or .     -> End turn            ',
+            'Shift or /     -> Select piece to move',
+            'WASD or Arrows -> Movement            ',
+        ]),
+    }
+
     def __init__(self):
         super().__init__()
+        
         self.width = 8
         self.height = 8
+        self.showing_start_image = True
+        Match3Game.INSTRUCTIONS['position'].x = self.width + 3
+        Match3Game.INSTRUCTIONS['position'].y = 3
         self.board = Board()
         self.cursor = Cursor()
+        self.starting_image = StartingImage()
         self.set_on_keydown(self.on_key_down)
         self.ending_turn = False
         self.end_turn_duration = 1
         self.time_since_ended_turn = 0
-
 
     def update(self, deltatime: datetime.timedelta):
         self.cursor.update(deltatime)
@@ -31,31 +45,31 @@ class Match3Game(Game):
 
 
     def draw(self):
+        if self.showing_start_image:
+            self.screen.draw_matrix(self.starting_image.matrix, self.starting_image.position)
+            super().draw()
+            return
         self.board.draw(self.screen)
         self.cursor.draw(self.screen)
+        self.screen.draw_matrix(Match3Game.INSTRUCTIONS['matrix'], Match3Game.INSTRUCTIONS['position'])
         super().draw()
 
 
-    def on_key_down(self, key:keyboard.Key):
-        char = hasattr(key, 'char')
-        if char:
-            if key.char is 'w' or key == keyboard.Key.up:
-                self.cursor.move('up')
-                return
-            if key.char is 's' or key == keyboard.Key.down:
-                self.cursor.move('down')
-                return
-            if key.char is 'a' or key == keyboard.Key.left:
-                self.cursor.move('left')
-                return
-            if key.char is 'd' or key == keyboard.Key.right:
-                self.cursor.move('right')
-                return
+    def on_key_down(self, key: keyboard.Key):
+        if key == keyboard.Key.esc:
+            self.end_game()
+            return
+        if self.showing_start_image:
+            self.starting_image.on_key_down(key)
         else:
-            if key == keyboard.Key.esc:
-                self.end_game()
-                return
-            if key == keyboard.Key.space and not self.ending_turn:
+            self.cursor.on_key_down(key)
+            char = None
+            if hasattr(key, 'char'):
+                char = key.char
+            if char == '/' or key == keyboard.Key.shift:
+                # TODO: handle selecting a piece to move
+                pass
+            if not self.ending_turn and (char == '.' or key == keyboard.Key.space):
                 self.end_turn()
                 return
 

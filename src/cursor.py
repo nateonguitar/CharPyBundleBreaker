@@ -2,6 +2,7 @@ import datetime
 
 from charpy import GameObject, Matrix, Screen
 import colorama
+from pynput import keyboard
 
 
 class Cursor(GameObject):
@@ -96,3 +97,21 @@ class Cursor(GameObject):
             if moved:
                 self.time_since_hide_matrix = 0
                 self.hiding = False
+
+
+    def on_key_down(self, key: keyboard.Key):
+        char = None
+        if hasattr(key, 'char'):
+            char = key.char
+        if char == 'w' or key == keyboard.Key.up:
+            self.move('up')
+            return
+        if char == 's' or key == keyboard.Key.down:
+            self.move('down')
+            return
+        if char == 'a' or key == keyboard.Key.left:
+            self.move('left')
+            return
+        if char == 'd' or key == keyboard.Key.right:
+            self.move('right')
+            return
