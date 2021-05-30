@@ -37,30 +37,27 @@ class Match3Game(Game):
 
 
     def on_key_down(self, key:keyboard.Key):
-        if key == keyboard.Key.esc:
-            self.end_game()
-            return
-        key_character = None
-        try:
-            key_character = key.char
-        except:
-            pass
-        if key_character is 'w' or key == keyboard.Key.up:
-            self.cursor.move('up')
-            return
-        if key_character is 's' or key == keyboard.Key.down:
-            self.cursor.move('down')
-            return
-        if key_character is 'a' or key == keyboard.Key.left:
-            self.cursor.move('left')
-            return
-        if key_character is 'd' or key == keyboard.Key.right:
-            self.cursor.move('right')
-            return
-
-        if key == keyboard.Key.space and not self.ending_turn:
-            self.end_turn()
-            return
+        char = hasattr(key, 'char')
+        if char:
+            if key.char is 'w' or key == keyboard.Key.up:
+                self.cursor.move('up')
+                return
+            if key.char is 's' or key == keyboard.Key.down:
+                self.cursor.move('down')
+                return
+            if key.char is 'a' or key == keyboard.Key.left:
+                self.cursor.move('left')
+                return
+            if key.char is 'd' or key == keyboard.Key.right:
+                self.cursor.move('right')
+                return
+        else:
+            if key == keyboard.Key.esc:
+                self.end_game()
+                return
+            if key == keyboard.Key.space and not self.ending_turn:
+                self.end_turn()
+                return
 
 
     def end_turn(self):
