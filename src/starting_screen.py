@@ -1,23 +1,25 @@
+import datetime
 import random
 
-from charpy import GameObject, Matrix
+from charpy import GameObject, Matrix, Screen
 import colorama
 from pynput import keyboard
 
-class StartingImage(GameObject):
+class StartingScreen(GameObject):
     def __init__(self):
         super().__init__()
         self.image = [
+            '            Match 3               ',
             '   ---              ---           ',
             ' --   --          --   --         ',
             '-       -        -       -       -',
             '          --   --         --   -- ',
             '            ---             ---   ',
             '         Space to Start           ',
-            '          x for random            ',
         ]
-        
         self.randomize_colors()
+        self.time_between_randomize = 0.1
+        self.time_since_randomize = 0
 
 
     def randomize_colors(self):
@@ -52,12 +54,17 @@ class StartingImage(GameObject):
 
 
     def on_key_down(self, key: keyboard.Key):
-        char = None
-        if hasattr(key, 'char'):
-            char = key.char
         if key == keyboard.Key.space:
-            self.game_instance.showing_start_image = False
+            self.game_instance.showing_starting_screen = False
             return
-        if char == 'x':
+
+
+    def update(self, deltatime: datetime.timedelta):
+        self.time_since_randomize += deltatime.total_seconds()
+        if self.time_since_randomize >= self.time_between_randomize:
+            self.time_since_randomize = 0
             self.randomize_colors()
-            return
+
+
+    def draw(self, screen: Screen):
+        screen.draw_matrix(self.matrix, self.position)

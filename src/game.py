@@ -5,7 +5,7 @@ from pynput import keyboard
 
 from .board import Board
 from .cursor import Cursor
-from .starting_image import StartingImage
+from .starting_image import StartingScreen
 
 class Match3Game(Game):
 
@@ -23,35 +23,37 @@ class Match3Game(Game):
         
         self.width = 8
         self.height = 8
-        self.showing_start_image = True
+        self.showing_starting_screen = True
         Match3Game.INSTRUCTIONS['position'].x = self.width + 3
         Match3Game.INSTRUCTIONS['position'].y = 3
         self.board = Board()
         self.cursor = Cursor()
-        self.starting_image = StartingImage()
+        self.starting_screen = StartingScreen()
         self.set_on_keydown(self.on_key_down)
         self.ending_turn = False
         self.end_turn_duration = 1
         self.time_since_ended_turn = 0
 
     def update(self, deltatime: datetime.timedelta):
-        self.cursor.update(deltatime)
-        if self.ending_turn:
-            self.time_since_ended_turn += deltatime.total_seconds()
-            if self.time_since_ended_turn >= self.end_turn_duration:
-                self.time_since_ended_turn = 0
-                self.ending_turn = False
-                self.board.fill()
+        if self.showing_starting_screen:
+            self.starting_screen.update(deltatime)
+        else:
+            self.cursor.update(deltatime)
+            if self.ending_turn:
+                self.time_since_ended_turn += deltatime.total_seconds()
+                if self.time_since_ended_turn >= self.end_turn_duration:
+                    self.time_since_ended_turn = 0
+                    self.ending_turn = False
+                    self.board.fill()
 
 
     def draw(self):
-        if self.showing_start_image:
-            self.screen.draw_matrix(self.starting_image.matrix, self.starting_image.position)
-            super().draw()
-            return
-        self.board.draw(self.screen)
-        self.cursor.draw(self.screen)
-        self.screen.draw_matrix(Match3Game.INSTRUCTIONS['matrix'], Match3Game.INSTRUCTIONS['position'])
+        if self.showing_starting_screen:
+            self.starting_screen.draw(self.screen)
+        else:
+            self.board.draw(self.screen)
+            self.cursor.draw(self.screen)
+            self.screen.draw_matrix(Match3Game.INSTRUCTIONS['matrix'], Match3Game.INSTRUCTIONS['position'])
         super().draw()
 
 
@@ -59,8 +61,8 @@ class Match3Game(Game):
         if key == keyboard.Key.esc:
             self.end_game()
             return
-        if self.showing_start_image:
-            self.starting_image.on_key_down(key)
+        if self.showing_starting_screen:
+            self.starting_screen.on_key_down(key)
         else:
             self.cursor.on_key_down(key)
             char = None
