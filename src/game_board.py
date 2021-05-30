@@ -66,7 +66,7 @@ class GameBoard(GameObject):
                 random_index = random.randint(0,len(self.shapes)-1)
                 self.matrix[i][j] = self.shapes[random_index]
 
-    
+
     def update(self, deltatime: datetime.timedelta):
         self.cursor.update(deltatime)
         if self.ending_turn:

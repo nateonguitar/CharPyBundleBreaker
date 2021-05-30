@@ -6,6 +6,7 @@ import colorama
 from pynput import keyboard
 
 class StartScreen(GameObject):
+
     def __init__(self):
         super().__init__()
         self.image = [
@@ -55,6 +56,7 @@ class StartScreen(GameObject):
 
     def on_key_down(self, key: keyboard.Key):
         pass
+
 
     def on_key_up(self, key: keyboard.Key):
         if key == keyboard.Key.space:
