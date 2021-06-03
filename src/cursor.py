@@ -72,11 +72,14 @@ class Cursor(GameObject):
 
 
     def draw(self, screen:Screen):
+        position = self.position.clone()
+        position.x *= 2
+        position.y *= 2
         if self.spin:
-            screen.draw_matrix(self.spin_states[self.state_index], self.position)
+            screen.draw_matrix(self.spin_states[self.state_index], position)
         else:
             if not self.hiding:
-                screen.draw_matrix(self.matrix, self.position)
+                screen.draw_matrix(self.matrix, position)
 
 
     def move(self, direction:str):
