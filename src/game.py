@@ -19,9 +19,10 @@ class Match3Game(Game):
         self.set_on_keyup(self.on_key_up)
         self.start_screen = StartScreen()
         self.game_board = None
+        # self.show_debug_info = True
 
 
-    def update(self, deltatime: datetime.timedelta):
+    def update(self, deltatime: float):
         if self.start_screen is not None:
             self.start_screen.update(deltatime)
         if self.game_board is not None:

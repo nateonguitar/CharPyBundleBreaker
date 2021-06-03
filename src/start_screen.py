@@ -64,8 +64,8 @@ class StartScreen(GameObject):
             return
 
 
-    def update(self, deltatime: datetime.timedelta):
-        self.time_since_randomize += deltatime.total_seconds()
+    def update(self, deltatime: float):
+        self.time_since_randomize += deltatime
         if self.time_since_randomize >= self.time_between_randomize:
             self.time_since_randomize = 0
             self.randomize_colors()

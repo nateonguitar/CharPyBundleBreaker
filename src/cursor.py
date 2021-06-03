@@ -56,16 +56,16 @@ class Cursor(GameObject):
         self.time_since_spin_state_switch = 0
 
 
-    def update(self, deltatime:datetime.timedelta):
+    def update(self, deltatime: float):
         if self.spin:
-            self.time_since_spin_state_switch += deltatime.total_seconds()
+            self.time_since_spin_state_switch += deltatime
             if self.time_since_spin_state_switch >= self.time_between_spin_states:
                 self.time_since_spin_state_switch = 0
                 self.state_index += 1
                 if self.state_index >= len(self.spin_states):
                     self.state_index = 0
         else:
-            self.time_since_hide_matrix += deltatime.total_seconds()
+            self.time_since_hide_matrix += deltatime
             if self.time_since_hide_matrix >= self.hide_matrix_time:
                 self.time_since_hide_matrix = 0
                 self.hiding = not self.hiding

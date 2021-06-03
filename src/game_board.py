@@ -1,4 +1,3 @@
-import datetime
 import random
 
 from pynput import keyboard
@@ -67,10 +66,10 @@ class GameBoard(GameObject):
                 self.matrix[i][j] = self.shapes[random_index]
 
 
-    def update(self, deltatime: datetime.timedelta):
+    def update(self, deltatime: float):
         self.cursor.update(deltatime)
         if self.ending_turn:
-            self.time_since_ended_turn += deltatime.total_seconds()
+            self.time_since_ended_turn += deltatime
             if self.time_since_ended_turn >= self.end_turn_duration:
                 self.time_since_ended_turn = 0
                 self.ending_turn = False
