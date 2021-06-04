@@ -176,14 +176,14 @@ class GameBoard(GameObject):
                         right += 1
                     else:
                         break
-                scoring = down >= 3 or right >= 3
-                if scoring:
+                if down >= 3:
                     nodes = []
-                    if down > right:
-                        for k in range(i, i+down):
-                            nodes.append(Vector2(x=j, y=k))
-                    else:
-                        for k in range(j, j+right):
-                            nodes.append(Vector2(x=k, y=i))
+                    for k in range(i, i+down):
+                        nodes.append(Vector2(x=j, y=k))
+                    matches.append(nodes)
+                if right >= 3:
+                    nodes = []
+                    for k in range(j, j+right):
+                        nodes.append(Vector2(x=k, y=i))
                     matches.append(nodes)
         return matches
