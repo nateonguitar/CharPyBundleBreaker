@@ -1,9 +1,4 @@
-import datetime
-
-from charpy import GameObject, Matrix, MatrixBorder, Screen, Vector2
-import colorama
-from pynput import keyboard
-
+from charpy import GameObject, Matrix, MatrixBorder, Screen
 
 class Cursor(GameObject):
 
@@ -12,25 +7,35 @@ class Cursor(GameObject):
         self.game_board = game_board
         self.board_size = game_board.size
 
-        self.matrix = Matrix \
+        border = MatrixBorder(MatrixBorder.SINGLE_LINE_THIN)
+        self.matrix: Matrix = Matrix \
             .empty_sized(rows=3, columns=3) \
-            .with_border(border=MatrixBorder(MatrixBorder.DOUBLE_LINE))
+            .with_border(border)
+        self.matrix[0][1] = None
+        self.matrix[1][0] = None
+        self.matrix[1][2] = None
+        self.matrix[2][1] = None
+        border = MatrixBorder(MatrixBorder.DOUBLE_LINE)
         self.piece_selected_matrix = Matrix \
             .empty_sized(rows=3, columns=3) \
-            .with_border(border=MatrixBorder(MatrixBorder.STARS))
+            .with_border(border)
+        self.piece_selected_matrix[0][1] = None
+        self.piece_selected_matrix[1][0] = None
+        self.piece_selected_matrix[1][2] = None
+        self.piece_selected_matrix[2][1] = None
 
 
     def draw(self, screen:Screen):
         position = self.position.clone()
         position.x *= 2
         position.y *= 2
-        if self.game_board.selected_piece is None:
-            screen.draw_matrix(self.matrix, position)
-        else:
+        if self.game_board.space_selected:
             screen.draw_matrix(self.piece_selected_matrix, position)
+        else:
+            screen.draw_matrix(self.matrix, position)
 
 
-    def move(self, direction:str):
+    def move(self, direction:str) -> bool:
         position_before_move = self.position.clone()
         if direction == 'up':
             self.position.y = max(0, self.position.y-1)
@@ -45,21 +50,5 @@ class Cursor(GameObject):
         if moved:
             self.time_since_hide_matrix = 0
             self.hiding = False
+        return moved
 
-
-    def on_key_down(self, key: keyboard.Key):
-        char = None
-        if hasattr(key, 'char'):
-            char = key.char
-        if char == 'w' or key == keyboard.Key.up:
-            self.move('up')
-            return
-        if char == 's' or key == keyboard.Key.down:
-            self.move('down')
-            return
-        if char == 'a' or key == keyboard.Key.left:
-            self.move('left')
-            return
-        if char == 'd' or key == keyboard.Key.right:
-            self.move('right')
-            return

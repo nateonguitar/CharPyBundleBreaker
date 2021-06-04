@@ -12,15 +12,15 @@ class GameBoard(GameObject):
     INSTRUCTIONS = {
         'position': Vector2.zero(),
         'matrix': Matrix([
-            'Space or .     -> End turn            ',
-            'Shift or /     -> Select piece to move',
-            'WASD or Arrows -> Movement            ',
+            'Arrows or WASD -> Movement            ',
+            'Space or .     -> Select piece to move',
+            'Shift or /     -> End turn            ',
         ]),
     }
 
     def __init__(self):
         super().__init__()
-        self.selected_piece: Shape = None
+        self.space_selected: Vector2 = None
         self.BRIGHT = colorama.Style.BRIGHT
         self.RESET_ALL = colorama.Style.RESET_ALL
         self.rows = 8
@@ -92,22 +92,45 @@ class GameBoard(GameObject):
 
 
     def update(self, deltatime: float):
-        pass
+        self.game_instance.debug_info['Cursor Position'] = self.cursor.position.__str__()
 
 
     def on_key_down(self, key: keyboard.Key):
-        with open('test_game_board.txt', 'w') as file:
-            self.cursor.on_key_down(key)
-            char = None
-            if hasattr(key, 'char'):
-                char = key.char
-            file.write(f'pressed {key}\n')
-            if char == '/' or key == keyboard.Key.shift:
-                # TODO: handle selecting a piece to move
-                pass
-            if char == '.' or key == keyboard.Key.space:
-                self.end_turn()
-                return
+        char = None
+        if hasattr(key, 'char'):
+            char = key.char
+        if key == keyboard.Key.up or char == 'w':
+            self.attempt_cursor_move('up')
+            return
+        if key == keyboard.Key.down or char == 's':
+            self.attempt_cursor_move('down')
+            return
+        if key == keyboard.Key.left or char == 'a':
+            self.attempt_cursor_move('left')
+            return
+        if key == keyboard.Key.right or char == 'd':
+            self.attempt_cursor_move('right')
+            return
+        if key == keyboard.Key.space or char == '/':
+            self.space_selected = not self.space_selected
+            return
+        if key == keyboard.Key.shift or char == '.':
+            self.end_turn()
+            return
+
+
+    def attempt_cursor_move(self, direction: str):
+        before_pos: Vector2 = self.cursor.position.clone()
+        moved: bool = self.cursor.move(direction)
+        if moved and self.space_selected == True:
+            after_pos: Vector2 = self.cursor.position.clone()
+            before_shape: Shape = self.matrix[before_pos.y][before_pos.x]
+            after_shape: Shape = self.matrix[after_pos.y][after_pos.x]
+            self.matrix[after_pos.y][after_pos.x] = before_shape
+            self.matrix[before_pos.y][before_pos.x] = after_shape
+            self.matches: list[list[Vector2]] = self.detect_matches()
+            self.display_matrix = self.generate_display_matrix()
+            # self.space_selected = False
 
 
     def on_key_up(self, key: keyboard.Key):
