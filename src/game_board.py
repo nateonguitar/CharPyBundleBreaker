@@ -13,8 +13,9 @@ class GameBoard(GameObject):
         'position': Vector2.zero(),
         'matrix': Matrix([
             'Arrows or WASD -> Movement            ',
-            'Space or .     -> Select piece to move',
-            'Shift or /     -> End turn            ',
+            'Space          -> Select piece to move',
+            'Shift          -> End turn            ',
+            'Esc            -> Kill game           ',
         ]),
     }
 
@@ -26,7 +27,7 @@ class GameBoard(GameObject):
         self.rows = 8
         self.columns = 8
         GameBoard.INSTRUCTIONS['position'].x = self.columns * 2 + 3
-        GameBoard.INSTRUCTIONS['position'].y = 3
+        GameBoard.INSTRUCTIONS['position'].y = 1
         self.shapes = [
             HeartShape,
             ClubShape,
@@ -111,10 +112,10 @@ class GameBoard(GameObject):
         if key == keyboard.Key.right or char == 'd':
             self.attempt_cursor_move('right')
             return
-        if key == keyboard.Key.space or char == '/':
+        if key == keyboard.Key.space:
             self.space_selected = not self.space_selected
             return
-        if key == keyboard.Key.shift or char == '.':
+        if key == keyboard.Key.shift:
             self.end_turn()
             return
 
