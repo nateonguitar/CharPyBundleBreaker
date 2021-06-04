@@ -20,16 +20,13 @@ class GameBoard(GameObject):
 
     def __init__(self):
         super().__init__()
+        self.selected_piece: Shape = None
         self.BRIGHT = colorama.Style.BRIGHT
         self.RESET_ALL = colorama.Style.RESET_ALL
         self.rows = 8
         self.columns = 8
         GameBoard.INSTRUCTIONS['position'].x = self.columns * 2 + 3
         GameBoard.INSTRUCTIONS['position'].y = 3
-        self.cursor = Cursor(Vector2(x=self.columns, y=self.rows))
-        self.ending_turn = False
-        self.end_turn_duration = 1
-        self.time_since_ended_turn = 0
         self.shapes = [
             HeartShape,
             ClubShape,
@@ -43,6 +40,7 @@ class GameBoard(GameObject):
         self.fill_spaces()
         self.matches: list[list[Vector2]] = self.detect_matches()
         self.display_matrix = self.generate_display_matrix()
+        self.cursor = Cursor(self)
 
 
     def draw(self, screen:Screen):
@@ -70,11 +68,15 @@ class GameBoard(GameObject):
         for i in range(size.y):
             for j in range(size.x):
                 shape = self.matrix[i][j]
-                m[i*2][j*2] = f'{shape.color}{self.BRIGHT}{shape.char}{self.RESET_ALL}'
+                if shape is not None:
+                    m[i*2][j*2] = f'{shape.color}{self.BRIGHT}{shape.char}{self.RESET_ALL}'
         for match in self.matches:
             first = match[0]
             second = match[1]
-            color = self.matrix[first.y][first.x].color
+            first_shape = self.matrix[first.y][first.x]
+            if first_shape is None:
+                continue
+            color = first_shape.color
             horizontal: bool = first.y == second.y
             for i in range(1, len(match)):
                 if horizontal:
@@ -90,36 +92,35 @@ class GameBoard(GameObject):
 
 
     def update(self, deltatime: float):
-        self.cursor.update(deltatime)
-        if self.ending_turn:
-            self.time_since_ended_turn += deltatime
-            if self.time_since_ended_turn >= self.end_turn_duration:
-                self.time_since_ended_turn = 0
-                self.ending_turn = False
-                self.fill_spaces()
+        pass
+
+
+    def on_key_down(self, key: keyboard.Key):
+        with open('test_game_board.txt', 'w') as file:
+            self.cursor.on_key_down(key)
+            char = None
+            if hasattr(key, 'char'):
+                char = key.char
+            file.write(f'pressed {key}\n')
+            if char == '/' or key == keyboard.Key.shift:
+                # TODO: handle selecting a piece to move
+                pass
+            if char == '.' or key == keyboard.Key.space:
+                self.end_turn()
+                return
 
 
     def on_key_up(self, key: keyboard.Key):
         pass
 
 
-    def on_key_down(self, key: keyboard.Key):
-            self.cursor.on_key_down(key)
-            char = None
-            if hasattr(key, 'char'):
-                char = key.char
-            if char == '/' or key == keyboard.Key.shift:
-                # TODO: handle selecting a piece to move
-                pass
-            if not self.ending_turn and (char == '.' or key == keyboard.Key.space):
-                self.end_turn()
-                return
-
-
     def end_turn(self):
         for row in self.matches:
             for node in row:
                 self.matrix[node.y][node.x] = None
+        self.fill_spaces()
+        self.matches = self.detect_matches()
+        self.display_matrix = self.generate_display_matrix()
 
 
     def detect_matches(self) -> list[list[Vector2]]:

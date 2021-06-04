@@ -42,9 +42,11 @@ g.matrix[3][5] = HeartShape()
 g.matrix[4][2] = HeartShape()
 g.matches = g.detect_matches()
 
+g.end_turn()
 g.display_matrix = g.generate_display_matrix()
 g.draw(screen)
 printer.draw_screen(screen)
+
 
 
 with open('test_game_board.txt', 'w') as f:

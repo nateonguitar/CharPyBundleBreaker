@@ -19,7 +19,7 @@ class Match3Game(Game):
         self.set_on_keyup(self.on_key_up)
         self.start_screen = StartScreen()
         self.game_board = None
-        # self.show_debug_info = True
+        self.show_debug_info = True
 
 
     def update(self, deltatime: float):

@@ -27,4 +27,4 @@ class BoxShape(Shape):
 
 class OShape(Shape):
     def __init__(self):
-        super().__init__(char='◉', color=Fore.MAGENTA)
+        super().__init__(char='◖', color=Fore.MAGENTA)
