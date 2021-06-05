@@ -27,7 +27,7 @@ class GameBoard(GameObject):
         self.rows = 8
         self.columns = 8
         GameBoard.INSTRUCTIONS['position'].x = self.columns * 2 + 3
-        GameBoard.INSTRUCTIONS['position'].y = 1
+        GameBoard.INSTRUCTIONS['position'].y = 3
         self.shapes = [
             HeartShape,
             ClubShape,
@@ -42,12 +42,19 @@ class GameBoard(GameObject):
         self.matches: list[list[Vector2]] = self.detect_matches()
         self.display_matrix = self.generate_display_matrix()
         self.cursor = Cursor(self)
+        self.max_turn_time = 5
+        self.current_turn_time = self.max_turn_time
+        self.score = 0
 
 
     def draw(self, screen:Screen):
         screen.draw_matrix(self.display_matrix, self.position)
         screen.draw_matrix(GameBoard.INSTRUCTIONS['matrix'], GameBoard.INSTRUCTIONS['position'])
         self.cursor.draw(screen)
+        screen.set(
+            x=self.position.x + self.size.x * 2 + 2,
+            y=1,
+            value=f'Score: {self.score}')
 
 
     def fill_spaces(self):
@@ -139,12 +146,24 @@ class GameBoard(GameObject):
 
 
     def end_turn(self):
+        self.current_turn_time = self.max_turn_time
+        self.score += self.calculate_score_from_matches()
+        self.space_selected = False
         for row in self.matches:
             for node in row:
                 self.matrix[node.y][node.x] = None
         self.fill_spaces()
         self.matches = self.detect_matches()
         self.display_matrix = self.generate_display_matrix()
+
+
+    def calculate_score_from_matches(self) -> int:
+        score = 0
+        for match in self.matches:
+            score += len(match)
+        score *= len(self.matches)
+        score *= 5
+        return score
 
 
     def detect_matches(self) -> list[list[Vector2]]:
