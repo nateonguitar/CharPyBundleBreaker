@@ -6,6 +6,7 @@ from pynput import keyboard
 from .game_board import GameBoard
 from .start_screen import StartScreen
 from .count_down import CountDown
+from .end_game_screen import EndGameScreen
 
 class Match3Game(Game):
     """
@@ -21,6 +22,7 @@ class Match3Game(Game):
         self.start_screen = StartScreen()
         self.count_down: CountDown = None
         self.game_board: GameBoard = None
+        self.end_game_screen: EndGameScreen = None
         # self.show_debug_info = True
 
 
@@ -31,6 +33,8 @@ class Match3Game(Game):
             self.count_down.update(deltatime)
         if self.game_board is not None:
             self.game_board.update(deltatime)
+        if self.end_game_screen is not None:
+            self.end_game_screen.update(deltatime)
 
 
     def draw(self):
@@ -40,6 +44,8 @@ class Match3Game(Game):
             self.count_down.draw(self.screen)
         if self.game_board is not None:
             self.game_board.draw(self.screen)
+        if self.end_game_screen is not None:
+            self.end_game_screen.draw(self.screen)
         super().draw()
 
 
@@ -51,6 +57,8 @@ class Match3Game(Game):
             self.start_screen.on_key_down(key)
         if self.game_board is not None:
             self.game_board.on_key_down(key)
+        if self.end_game_screen is not None:
+            self.end_game_screen.on_key_down(key)
 
 
     def on_key_up(self, key: keyboard.Key):
@@ -68,3 +76,13 @@ class Match3Game(Game):
     def start_game(self):
         self.count_down = None
         self.game_board = GameBoard()
+
+    
+    def finish_game(self, score: int):
+        self.game_board = None
+        self.end_game_screen = EndGameScreen(score)
+
+
+    def restart(self):
+        self.end_game_screen = None
+        self.count_down = CountDown()

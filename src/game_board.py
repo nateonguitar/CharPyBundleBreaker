@@ -47,14 +47,31 @@ class GameBoard(GameObject):
         self.score = 0
 
 
+    def update(self, deltatime: float):
+        self.game_instance.debug_info['Cursor Position'] = self.cursor.position.__str__()
+        self.current_turn_time -= deltatime
+        if self.current_turn_time <= 0:
+            self.cursor = None
+            self.game_instance.finish_game(self.score)
+
+
     def draw(self, screen:Screen):
         screen.draw_matrix(self.display_matrix, self.position)
         screen.draw_matrix(GameBoard.INSTRUCTIONS['matrix'], GameBoard.INSTRUCTIONS['position'])
         self.cursor.draw(screen)
-        screen.set(
-            x=self.position.x + self.size.x * 2 + 2,
-            y=1,
-            value=f'Score: {self.score}')
+
+        score_string = f'Score: {self.score}'
+        score_position = Vector2(x=self.position.x + self.size.x * 2 + 2, y=1)
+        screen.draw_string(score_string, score_position)
+
+        timer_string = ''
+        for i in range(int(self.current_turn_time * 2)):
+            timer_string += '█'
+        timer_position = Vector2(
+            x=GameBoard.INSTRUCTIONS['position'].x,
+            y=(self.rows * 2) - 1
+        )
+        screen.draw_string(timer_string, timer_position)
 
 
     def fill_spaces(self):
@@ -63,7 +80,7 @@ class GameBoard(GameObject):
             for j in range(0, size.x):
                 if self.matrix[i][j] != None:
                     continue
-                random_index = random.randint(0,len(self.shapes)-1)
+                random_index = random.randint(0, len(self.shapes)-1)
                 RandomShapeClass = self.shapes[random_index]
                 self.matrix[i][j] = RandomShapeClass()
 
@@ -97,10 +114,6 @@ class GameBoard(GameObject):
                     char = '|'
                 m[y][x] = f'{color}{self.BRIGHT}{char}{self.RESET_ALL}'
         return m
-
-
-    def update(self, deltatime: float):
-        self.game_instance.debug_info['Cursor Position'] = self.cursor.position.__str__()
 
 
     def on_key_down(self, key: keyboard.Key):
@@ -146,7 +159,8 @@ class GameBoard(GameObject):
 
 
     def end_turn(self):
-        self.current_turn_time = self.max_turn_time
+        if len(self.matches) > 0:
+            self.current_turn_time = self.max_turn_time
         self.score += self.calculate_score_from_matches()
         self.space_selected = False
         for row in self.matches:
