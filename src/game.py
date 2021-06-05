@@ -5,6 +5,7 @@ from pynput import keyboard
 
 from .game_board import GameBoard
 from .start_screen import StartScreen
+from .count_down import CountDown
 
 class Match3Game(Game):
     """
@@ -18,13 +19,16 @@ class Match3Game(Game):
         self.set_on_keydown(self.on_key_down)
         self.set_on_keyup(self.on_key_up)
         self.start_screen = StartScreen()
-        self.game_board = None
+        self.count_down: CountDown = None
+        self.game_board: GameBoard = None
         # self.show_debug_info = True
 
 
     def update(self, deltatime: float):
         if self.start_screen is not None:
             self.start_screen.update(deltatime)
+        if self.count_down is not None:
+            self.count_down.update(deltatime)
         if self.game_board is not None:
             self.game_board.update(deltatime)
 
@@ -32,6 +36,8 @@ class Match3Game(Game):
     def draw(self):
         if self.start_screen is not None:
             self.start_screen.draw(self.screen)
+        if self.count_down is not None:
+            self.count_down.draw(self.screen)
         if self.game_board is not None:
             self.game_board.draw(self.screen)
         super().draw()
@@ -54,6 +60,11 @@ class Match3Game(Game):
             self.game_board.on_key_up(key)
 
 
-    def start_game(self):
+    def start_count_down(self):
         self.start_screen = None
+        self.count_down = CountDown()
+
+
+    def start_game(self):
+        self.count_down = None
         self.game_board = GameBoard()

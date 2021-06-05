@@ -60,7 +60,7 @@ class StartScreen(GameObject):
 
     def on_key_up(self, key: keyboard.Key):
         if key == keyboard.Key.space:
-            self.game_instance.start_game()
+            self.game_instance.start_count_down()
             return
 
 
