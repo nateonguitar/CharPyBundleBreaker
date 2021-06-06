@@ -17,6 +17,7 @@ class Match3Game(Game):
 
     def __init__(self):
         super().__init__()
+        self.scores = []
         self.set_on_keydown(self.on_key_down)
         self.set_on_keyup(self.on_key_up)
         self.start_screen = StartScreen()
@@ -80,7 +81,8 @@ class Match3Game(Game):
     
     def finish_game(self, score: int):
         self.game_board = None
-        self.end_game_screen = EndGameScreen(score)
+        self.scores.append(score)
+        self.end_game_screen = EndGameScreen(self.scores)
 
 
     def restart(self):
