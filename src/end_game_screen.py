@@ -12,14 +12,16 @@ class EndGameScreen(GameObject):
 
 
     def draw(self, screen: Screen):
-        screen.draw_string(f'         GAME OVER', Vector2(0, 1))
-        screen.draw_string(f'    Space to try again', Vector2(0, 3))
-        score_offset = Vector2(10, 5)
-        screen.draw_string('Scores', score_offset)
-        screen.draw_string('--------', score_offset.add(Vector2(-1, 1)))
+        screen.draw_string('GAME OVER', Vector2(9, 1))
+        screen.draw_string('Space to try again', Vector2(4, 3))
+        scores_offset = Vector2(10, 5)
+        screen.draw_string('Scores', scores_offset)
+        screen.draw_string('--------', scores_offset.add(Vector2(-1, 1)))
         for i in range(len(self.scores)):
             score = self.scores[i]
-            screen.draw_string(f'{i+1}: {score}', score_offset.add(Vector2(-1, i+2)))
+            string = f'{i+1}: {score}'
+            pos = scores_offset.add(Vector2(-1, i+2))
+            screen.draw_string(string, pos)
 
 
     def on_key_down(self, key: keyboard.Key):

@@ -4,20 +4,11 @@ from pynput import keyboard
 from charpy import GameObject, Matrix, Vector2, Screen
 import colorama
 
+from .constants import Constants
 from .cursor import Cursor
 from .shape import Shape, HeartShape, ClubShape, SpadeShape, DiamondShape, BoxShape, OShape
 
 class GameBoard(GameObject):
-
-    INSTRUCTIONS = {
-        'position': Vector2.zero(),
-        'matrix': Matrix([
-            'Arrows or WASD -> Movement            ',
-            'Space          -> Select piece to move',
-            'Shift          -> End turn            ',
-            'Esc            -> Kill game           ',
-        ]),
-    }
 
     def __init__(self):
         super().__init__()
@@ -26,8 +17,6 @@ class GameBoard(GameObject):
         self.RESET_ALL = colorama.Style.RESET_ALL
         self.rows = 8
         self.columns = 8
-        GameBoard.INSTRUCTIONS['position'].x = self.columns * 2 + 3
-        GameBoard.INSTRUCTIONS['position'].y = 3
         self.shapes = [
             HeartShape,
             ClubShape,
@@ -57,20 +46,20 @@ class GameBoard(GameObject):
 
     def draw(self, screen:Screen):
         screen.draw_matrix(self.display_matrix, self.position)
-        screen.draw_matrix(GameBoard.INSTRUCTIONS['matrix'], GameBoard.INSTRUCTIONS['position'])
-        self.cursor.draw(screen)
 
         score_string = f'Score: {self.score}'
-        score_position = Vector2(x=self.position.x + self.size.x * 2 + 2, y=1)
+        score_position = self.position.add(Vector2(self.size.x * 2 + 2, 0))
         screen.draw_string(score_string, score_position)
+
+        instructions_position = self.position.add(Vector2(self.size.x * 2 + 2, 4))
+        screen.draw_matrix(Constants.INSTRUCTIONS, instructions_position)
+        self.cursor.draw(screen)
+
 
         timer_string = ''
         for i in range(int(self.current_turn_time * 2)):
             timer_string += '█'
-        timer_position = Vector2(
-            x=GameBoard.INSTRUCTIONS['position'].x,
-            y=(self.rows * 2) - 1
-        )
+        timer_position = self.position.add(Vector2(self.size.x * 2 + 2, (self.rows * 2) - 1))
         screen.draw_string(timer_string, timer_position)
 
 
