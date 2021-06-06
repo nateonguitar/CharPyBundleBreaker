@@ -1,9 +1,10 @@
-import datetime
 import random
 
-from charpy import GameObject, Matrix, Screen
+from charpy import GameObject, Matrix, Screen, Vector2
 import colorama
 from pynput import keyboard
+
+from .constants import Constants
 
 class StartScreen(GameObject):
 
@@ -73,3 +74,5 @@ class StartScreen(GameObject):
 
     def draw(self, screen: Screen):
         screen.draw_matrix(self.matrix, self.position)
+        instructions_position = Vector2(2, len(self.image) + 2)
+        screen.draw_matrix(Constants.INSTRUCTIONS, instructions_position)
