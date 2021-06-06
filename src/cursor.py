@@ -1,4 +1,4 @@
-from charpy import GameObject, Matrix, MatrixBorder, Screen
+from charpy import GameObject, Matrix, MatrixBorder, Screen, Vector2
 
 class Cursor(GameObject):
 
@@ -26,9 +26,7 @@ class Cursor(GameObject):
 
 
     def draw(self, screen:Screen):
-        position = self.position.clone()
-        position.x *= 2
-        position.y *= 2
+        position = self.position.add(Vector2(self.position.x, self.position.y))
         if self.game_board.space_selected:
             screen.draw_matrix(self.piece_selected_matrix, position)
         else:

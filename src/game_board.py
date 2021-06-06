@@ -59,7 +59,8 @@ class GameBoard(GameObject):
         timer_string = ''
         for i in range(int(self.current_turn_time * 2)):
             timer_string += '█'
-        timer_position = self.position.add(Vector2(self.size.x * 2 + 2, (self.rows * 2) - 1))
+        timer_position_offset = Vector2(self.size.x * 2 + 2, (self.rows * 2) - 1)
+        timer_position = self.position.add(timer_position_offset)
         screen.draw_string(timer_string, timer_position)
 
 
@@ -140,7 +141,6 @@ class GameBoard(GameObject):
             self.matrix[before_pos.y][before_pos.x] = after_shape
             self.matches: list[list[Vector2]] = self.detect_matches()
             self.display_matrix = self.generate_display_matrix()
-            # self.space_selected = False
 
 
     def on_key_up(self, key: keyboard.Key):
