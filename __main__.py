@@ -1,4 +1,4 @@
-from src.game import Match3Game
+from src.game import BundleBreakerGame
 
-g = Match3Game()
+g = BundleBreakerGame()
 g.run()

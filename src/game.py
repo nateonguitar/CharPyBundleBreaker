@@ -8,7 +8,7 @@ from .start_screen import StartScreen
 from .count_down import CountDown
 from .end_game_screen import EndGameScreen
 
-class Match3Game(Game):
+class BundleBreakerGame(Game):
     """
     This class is just the handler for the different screens.
     If the StartScreen is active it passes keystrokes and draw functions to that page.
