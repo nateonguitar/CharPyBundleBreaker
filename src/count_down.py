@@ -1,4 +1,4 @@
-from charpy import GameObject, Matrix, Screen, Vector2
+from frolic import GameObject, Matrix, Screen, Vector2
 
 
 class CountDown(GameObject):

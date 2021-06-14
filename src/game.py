@@ -1,6 +1,6 @@
 import datetime
 
-from charpy import Game
+from frolic import Game
 from pynput import keyboard
 
 from .game_board import GameBoard

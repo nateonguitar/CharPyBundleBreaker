@@ -1,4 +1,4 @@
-from charpy import GameObject, Matrix, MatrixBorder, Screen, Vector2
+from frolic import GameObject, Matrix, MatrixBorder, Screen, Vector2
 
 class Cursor(GameObject):
 

@@ -1,4 +1,4 @@
-from charpy import GameObject, Screen, Vector2
+from frolic import GameObject, Screen, Vector2
 from pynput import keyboard
 
 class EndGameScreen(GameObject):

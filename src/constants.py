@@ -1,4 +1,4 @@
-from charpy import Matrix
+from frolic import Matrix
 
 class Constants():
     INSTRUCTIONS = Matrix([

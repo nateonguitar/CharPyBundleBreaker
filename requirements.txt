@@ -1,2 +1,1 @@
-charpy
-colorama
+frolic-engine

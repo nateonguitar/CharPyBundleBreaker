@@ -1,7 +1,7 @@
 import random
 
 from pynput import keyboard
-from charpy import GameObject, Matrix, Vector2, Screen
+from frolic import GameObject, Matrix, Vector2, Screen
 import colorama
 
 from .constants import Constants

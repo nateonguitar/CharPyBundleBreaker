@@ -3,7 +3,7 @@ Run this to generate a snapshot of the game and make sure all of the scoring / m
 This allows pdb break points without the game loop getting in the way.
 Almost like a unit test, but you have to manually look at the output file and verify.
 """
-from charpy import ConsolePrinter
+from frolic import ConsolePrinter
 from src.end_game_screen import EndGameScreen
 
 printer = ConsolePrinter()
